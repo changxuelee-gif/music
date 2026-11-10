@@ -1,0 +1,31 @@
+{
+  "name": "fenghuang-aitting-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "声屿音乐导航 - 后端服务（纯导航，不存储/不播放任何音频）",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "init:db": "node scripts/init-db.js"
+  },
+  "dependencies": {
+    "ali-oss": "^6.23.0",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^2.5.0",
+    "mysql2": "^3.11.3",
+    "xss": "^1.0.15"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

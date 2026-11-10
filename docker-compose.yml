@@ -1,0 +1,40 @@
+version: "3.9"
+
+# 本地/测试环境依赖：MySQL 8 + Redis 7
+# 生产环境可按需替换为云数据库，仅需同步修改 server/.env
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: fh-music-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123456}
+      MYSQL_DATABASE: fenghuang_music
+      MYSQL_USER: fh_music
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-fh_music_123}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./server/src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./server/src/db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fh-music-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-redis123456}"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
